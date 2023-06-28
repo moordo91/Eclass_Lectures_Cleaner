@@ -36,8 +36,9 @@ def check_class(driver):
     for element in elements:
         if "온라인강의" in element.get_attribute("innerText"):
             element.find_element(By.XPATH, "..").click()
-            return
+            return False
     messagebox.showinfo("확인", "모든 강의를 수강하셨습니다!")
+    return True
 
 def check_video(driver):
     def time2seconds(time_str):
@@ -51,6 +52,7 @@ def check_video(driver):
             t = dt.datetime.strptime(time_str, "%M:%S")
             return int(t.minute*60 + t.second)
     
+    check_all = False
     elements = driver.find_elements(By.ID, "per_text")
     for element in elements:
         if "100%" in element.get_attribute("innerText"):
@@ -64,8 +66,12 @@ def check_video(driver):
         lecture = target.find_element(By.CLASS_NAME, "site-mouseover-color")
         lec_title = lecture.get_attribute("innerText")
         lecture.click()
-        return curr_time, tot_time, lec_title
-    driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
+        return check_all, curr_time, tot_time, lec_title
+    
+    check_all = True
+    if check_all:
+        driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
+        return True, None, None, None
 
 def watch_video(curr_time, tot_time, lec_title):
     def update_progress_label():
@@ -80,6 +86,7 @@ def watch_video(curr_time, tot_time, lec_title):
             bar.destory()
 
     bar = Tk();
+    bar.wm_attributes("-topmost", 1)
     bar.title("Progress")
 
     label = Label(bar, text=lec_title, font=("맑은 고딕", 10))
@@ -97,9 +104,15 @@ def watch_video(curr_time, tot_time, lec_title):
 def main():
     driver = run_selenium()
     login(driver)
-    check_class(driver)
-    curr_time, tot_time, lec_title = check_video(driver)
-    watch_video(curr_time, tot_time, lec_title)
+    while check_class(driver) is not True:
+        while True:
+            check_all, curr_time, tot_time, lec_title = check_video(driver)
+            if check_all != True:
+                watch_video(curr_time, tot_time, lec_title)
+                driver.back()
+            else:
+                break
+        driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
     
 if __name__ == "__main__":
     main()
