@@ -27,8 +27,9 @@ function checkVideo() {
     var currentTime = timeToSeconds(times[0]);
     var totalTime = timeToSeconds(times[1]);
     var timeArray = {
-      currentTime: currentTime,
-      totalTime: totalTime,
+      "currentTime": currentTime,
+      "totalTime": totalTime,
+      "remainingTime": currentTime - currentTime
     };
     localStorage.setItem("timeArray", JSON.stringify(timeArray));
     target.querySelector(".site-mouseover-color").click();

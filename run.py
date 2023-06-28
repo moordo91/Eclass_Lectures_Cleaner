@@ -3,8 +3,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
+from tkinter import *
+import datetime as dt
+import time
 import json
 
 def run_selenium():
@@ -37,9 +40,16 @@ def check_class(driver):
     messagebox.showinfo("확인", "모든 강의를 수강하셨습니다!")
 
 def check_video(driver):
-    def time2seconds(time_string):
-        parts = time_string.split(":")
-        return int(parts[0]) * 60 + int(parts[1]);
+    def time2seconds(time_str):
+        if ':' not in time_str:
+            return int(time_str)
+        parts = time_str.split(':')
+        if len(parts) == 3:
+            t = dt.datetime.strptime(time_str, "%H:%M:%S")
+            return int(t.hour*3600 + t.minute*60 + t.second)
+        elif len(parts) == 2:
+            t = dt.datetime.strptime(time_str, "%M:%S")
+            return int(t.minute*60 + t.second)
     
     elements = driver.find_elements(By.ID, "per_text")
     for element in elements:
@@ -48,20 +58,48 @@ def check_video(driver):
         target = element.find_element(By.XPATH, "../..")
         time_ratio = target.find_element(By.XPATH, "./child::*[2]/child::*[3]").get_attribute("innerText")
         times = time_ratio.split(" / ")
-        current_time = time2seconds(times[0])    
-        total_time = time2seconds(times[1])
-        time_info = [current_time, total_time]
-        target.find_element(By.CLASS_NAME, "site-mouseover-color").click()
-        return time_info
+        curr_time = time2seconds(times[0])
+        tot_time = time2seconds(times[1])
+        
+        lecture = target.find_element(By.CLASS_NAME, "site-mouseover-color")
+        lec_title = lecture.get_attribute("innerText")
+        lecture.click()
+        return curr_time, tot_time, lec_title
     driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
 
+def watch_video(curr_time, tot_time, lec_title):
+    def update_progress_label():
+        return f"Current Progress: {progressbar['value']:.1f}%"
+    
+    def update_progress():
+        progressbar['value'] = progressbar['value'] + (300 / (tot_time + 150))
+        value_label['text'] = update_progress_label()
+        if progressbar['value'] < progressbar['maximum']:
+            bar.after(3000, update_progress)
+        else:
+            bar.destory()
 
+    bar = Tk();
+    bar.title("Progress")
+
+    label = Label(bar, text=lec_title, font=("맑은 고딕", 10))
+    label.pack(pady=5)
+    
+    progressbar = ttk.Progressbar(bar, maximum=100, value=curr_time / (tot_time+150), length=300)
+    progressbar.pack(padx=10, pady=5)
+    
+    value_label = ttk.Label(bar, text=update_progress_label())
+    value_label.pack(padx=10, pady=5)
+    
+    update_progress()
+    bar.mainloop()
     
 def main():
     driver = run_selenium()
     login(driver)
     check_class(driver)
-    time_info = check_video(driver)
+    curr_time, tot_time, lec_title = check_video(driver)
+    watch_video(curr_time, tot_time, lec_title)
     
 if __name__ == "__main__":
     main()
