@@ -12,11 +12,14 @@ Chrome이 설치되어 있어야 합니다.
 
 ## 다운로드
 
-아래 링크를 클릭하세요. 또는 저장소에 포함된 `E-CLEC_Cleaner.exe` 파일을 실행하세요.
-
-
+저장소에 포함된 `E-CLEC_Cleaner.exe` 파일을 실행하세요(추천).
+또는, 아래 링크를 클릭하세요. 
 
 [Download Link](https://raw.githubusercontent.com/moordo91/Eclass_Lectures_Cleaner/main/dist/E-CLEC_Cleaner.exe)
+
+## 스크린샷
+
+![실행 화면](https://github.com/moordo91/Eclass_Lectures_Cleaner/assets/82254758/9f0d103b-1ffd-4440-a604-0e2f0012b0f0)
 
 ## 사용법
 
@@ -31,6 +34,7 @@ Chrome이 설치되어 있어야 합니다.
 - 함께 실행되는 터미널 창은 끄지 마세요.
 - 최초 실행 시, `credentials.json` 파일이 생성되며, 입력한 아이디와 비밀번호를 저장합니다.
 - 강의 수강 도중에 프로그램을 종료하는 경우, 수강 시간이 반영되지 않을 수 있습니다.
+- ***틈틈이 출석을 확인하세요.*** 매크로를 너무 맹신하지 마세요. 예상치 못한 오류가 발생할 수 있습니다.
 
 
 ## 사용된 라이브러리
