@@ -25,6 +25,8 @@ def check_data(username, password):
 
     
 window = Tk()
+icon = PhotoImage(file = 'applicator.png')
+window.wm_iconphoto(False, icon)
 window.update()
 center_window(window)
 

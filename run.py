@@ -8,7 +8,7 @@ from tkinter import ttk
 from tkinter import *
 import json
 import datetime as dt
-from tkinter_control import center_window
+import tkinter_control as tkc
 
 def run_selenium():
     options = Options()
@@ -85,51 +85,32 @@ def check_video(driver):
         return True, None, None, None
 
 def watch_video(driver, curr_time, tot_time, lec_title):
-    def update_progress_label():
-        if progressbar['value'] < 100:
-            return f"Current Progress: {progressbar['value']:.1f}%"
-        else:
-            return "Complete Watching."
     
-    def update_progress():
-        progressbar['value'] = progressbar['value'] + (300 / (tot_time + 240))
-        value_label['text'] = update_progress_label()
-        if progressbar['value'] < progressbar['maximum']:
-            bar.after(3000, update_progress)
-        else:
-            bar.quit()
-    
-    def quit_program(driver):
-        msg_box = messagebox.askquestion("종료", 
-                                         "프로그램을 종료하시겠습니까?\n(현재 진행 상황이 반영되지 않을 수 있습니다.)",
-                                         parent=bar)
-        if msg_box == 'yes':
-            bar.destroy()
-            driver.close()
-        else:
-            pass
-    
-    bar = Tk();
-    center_window(bar)
-    bar.wm_attributes("-topmost", 1)
+    bar = Toplevel();
+    icon = PhotoImage(file = 'applicator.png')
+    bar.wm_iconphoto(False, icon)
+    tkc.center_window(bar)
     bar.title("Progress Bar")
 
     title = Label(bar, text=lec_title, font=("맑은 고딕", 10, "bold"))
     title.pack(pady=(10, 0))
     
-    notion = Label(bar, text="강의 진행률은 프로그램의 정확성 향상을 위해\n실제 진행률보다 보수적으로 표시됩니다.", font=("맑은 고딕", 9))
+    notion = Label(bar, 
+                   text="강의 진행률은 프로그램의 정확성 향상을 위해\n실제 진행률보다 보수적으로 표시됩니다.", 
+                   font=("맑은 고딕", 10))
     notion.pack(padx=10, pady=5)
     
     progressbar = ttk.Progressbar(bar, maximum=100, value=(curr_time * 100 / (tot_time+240)), length=300)
     progressbar.pack(padx=10, pady=5)
     
-    value_label = ttk.Label(bar, text=update_progress_label())
+    value_label = ttk.Label(bar, text=tkc.update_progress_label(progressbar))
     value_label.pack(padx=10, pady=5)
     
-    button = Button(bar, text="Quit", command=lambda: quit_program(driver), width=10)
+    button = Button(bar, text="Quit", command=lambda: tkc.close_bar(driver, bar), width=10)
     button.pack(pady=10)
     
-    update_progress()
+    bar.protocol("WM_DELETE_WINDOW", lambda: tkc.close_bar(driver, bar))
+    tkc.update_progress(bar, tot_time, progressbar, value_label)
     bar.mainloop()
     
     return bar
