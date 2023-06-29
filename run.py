@@ -6,9 +6,9 @@ from selenium import webdriver
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import *
-import datetime as dt
-import time
 import json
+import datetime as dt
+from tkinter_control import center_window
 
 def run_selenium():
     options = Options()
@@ -20,6 +20,15 @@ def run_selenium():
 
     driver.get("https://eclass.seoultech.ac.kr/ilos/main/member/login_form.acl")
     driver.implicitly_wait(time_to_wait=1)
+    
+    windows = driver.window_handles
+    
+    for w in windows:
+        if w != windows[0]:
+            driver.switch_to.window(w)
+            driver.close()
+            
+    driver.switch_to.window(windows[0])
     
     return driver
 
@@ -66,6 +75,8 @@ def check_video(driver):
         lecture = target.find_element(By.CLASS_NAME, "site-mouseover-color")
         lec_title = lecture.get_attribute("innerText")
         lecture.click()
+        driver.implicitly_wait(time_to_wait=1)
+
         return check_all, curr_time, tot_time, lec_title
     
     check_all = True
@@ -73,43 +84,68 @@ def check_video(driver):
         driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
         return True, None, None, None
 
-def watch_video(curr_time, tot_time, lec_title):
+def watch_video(driver, curr_time, tot_time, lec_title):
     def update_progress_label():
-        return f"Current Progress: {progressbar['value']:.1f}%"
+        if progressbar['value'] < 100:
+            return f"Current Progress: {progressbar['value']:.1f}%"
+        else:
+            return "Complete Watching."
     
     def update_progress():
-        progressbar['value'] = progressbar['value'] + (300 / (tot_time + 150))
+        progressbar['value'] = progressbar['value'] + (300 / (tot_time + 240))
         value_label['text'] = update_progress_label()
         if progressbar['value'] < progressbar['maximum']:
-            bar.after(3000, update_progress)
+            # bar.after(3000, update_progress)
+            bar.after(30, update_progress)
         else:
-            bar.destory()
-
-    bar = Tk();
-    bar.wm_attributes("-topmost", 1)
-    bar.title("Progress")
-
-    label = Label(bar, text=lec_title, font=("맑은 고딕", 10))
-    label.pack(pady=5)
+            bar.quit()
     
-    progressbar = ttk.Progressbar(bar, maximum=100, value=curr_time / (tot_time+150), length=300)
+    def quit_program(driver):
+        msg_box = messagebox.askquestion("종료", 
+                                         "프로그램을 종료하시겠습니까?\n(현재 진행 상황이 반영되지 않을 수 있습니다.)",
+                                         parent=bar)
+        if msg_box == 'yes':
+            bar.destroy()
+            driver.close()
+        else:
+            pass
+    
+    bar = Tk();
+    center_window(bar)
+    bar.wm_attributes("-topmost", 1)
+    bar.title("Progress Bar")
+
+    title = Label(bar, text=lec_title, font=("맑은 고딕", 10, "bold"))
+    title.pack(pady=(10, 0))
+    
+    notion = Label(bar, text="강의 진행률은 프로그램의 정확성 향상을 위해\n실제 진행률보다 보수적으로 표시됩니다.", font=("맑은 고딕", 9))
+    notion.pack(padx=10, pady=5)
+    
+    progressbar = ttk.Progressbar(bar, maximum=100, value=(curr_time * 100 / (tot_time+240)), length=300)
     progressbar.pack(padx=10, pady=5)
     
     value_label = ttk.Label(bar, text=update_progress_label())
     value_label.pack(padx=10, pady=5)
     
+    button = Button(bar, text="Quit", command=lambda: quit_program(driver), width=10)
+    button.pack(pady=10)
+    
     update_progress()
     bar.mainloop()
     
+    return bar
+
 def main():
     driver = run_selenium()
     login(driver)
-    while check_class(driver) is not True:
+    while check_class(driver) != True:
         while True:
             check_all, curr_time, tot_time, lec_title = check_video(driver)
             if check_all != True:
-                watch_video(curr_time, tot_time, lec_title)
+                bar = watch_video(driver, curr_time, tot_time, lec_title)
+                bar.destroy()
                 driver.back()
+                driver.refresh()
             else:
                 break
         driver.get("https://eclass.seoultech.ac.kr/ilos/main/main_form.acl")
