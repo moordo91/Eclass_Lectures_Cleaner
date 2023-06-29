@@ -95,8 +95,7 @@ def watch_video(driver, curr_time, tot_time, lec_title):
         progressbar['value'] = progressbar['value'] + (300 / (tot_time + 240))
         value_label['text'] = update_progress_label()
         if progressbar['value'] < progressbar['maximum']:
-            # bar.after(3000, update_progress)
-            bar.after(30, update_progress)
+            bar.after(3000, update_progress)
         else:
             bar.quit()
     
