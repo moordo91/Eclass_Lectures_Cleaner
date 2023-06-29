@@ -15,7 +15,7 @@ Chrome이 설치되어 있어야 합니다.
 저장소에 포함된 `E-CLEC_Cleaner.exe` 파일을 실행하세요(추천).
 또는, 아래 링크를 클릭하세요. 
 
-[Download Link](https://raw.githubusercontent.com/moordo91/Eclass_Lectures_Cleaner/main/dist/E-CLEC_Cleaner.exe)
+[Download Link](https://raw.githubusercontent.com/moordo91/Eclass_Lectures_Cleaner/main/run/E-CLEC_Cleaner.exe)
 
 ## 스크린샷
 
