@@ -6,6 +6,8 @@ from selenium import webdriver
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import *
+import urllib
+import base64
 import json
 import datetime as dt
 import tkinter_control as tkc
@@ -87,8 +89,15 @@ def check_video(driver):
 def watch_video(driver, curr_time, tot_time, lec_title):
     
     bar = Toplevel();
-    icon = PhotoImage(file = 'applicator.png')
-    bar.wm_iconphoto(False, icon)
+    img_url = "https://github.com/moordo91/Eclass_Lectures_Cleaner/blob/main/applicator.png?raw=true"
+    with urllib.request.urlopen(img_url) as url:
+        raw_data = url.read()
+    b64_data = base64.encodebytes(raw_data)
+    image = PhotoImage(data=b64_data)
+
+    bar.tk.call('wm', 'iconphoto', bar._w, image)
+    # icon = PhotoImage(file = 'applicator.png')
+    # bar.wm_iconphoto(False, icon)
     tkc.center_window(bar)
     bar.title("Progress Bar")
 
