@@ -12,10 +12,13 @@ Chrome이 설치되어 있어야 합니다.
 
 ## 다운로드
 
-저장소에 포함된 `E-CLEC_Cleaner.exe` 파일을 실행하세요(추천).
-또는, 아래 링크를 클릭하세요. 
+저장소에 포함된 `app.py`파일을 실행하세요.
+저장소에 포함된 `E-CLEC_Cleaner.exe` 파일을 실행하세요.
+또는, 아래 링크를 클릭하세요.
 
 [Download Link](https://raw.githubusercontent.com/moordo91/Eclass_Lectures_Cleaner/main/run/E-CLEC_Cleaner.exe)
+
+*현재 Windows Defender에서 실행파일을 바이러스로 탐지하는 이슈가 존재합니다.*
 
 ## 스크린샷
 
