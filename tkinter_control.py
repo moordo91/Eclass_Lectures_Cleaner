@@ -38,3 +38,6 @@ def close_bar(driver, root):
         driver.close()
     else:
         pass
+    
+if __name__ == "__main__":
+    pass

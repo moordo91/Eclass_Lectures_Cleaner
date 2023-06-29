@@ -37,14 +37,12 @@ image = PhotoImage(data=b64_data)
 
 window.tk.call('wm', 'iconphoto', window._w, image)
 
-# icon = PhotoImage(file = 'applicator.png')
-# window.wm_iconphoto(False, icon)
 window.update()
 center_window(window)
 
 window.title("Cleaner")
-title = ttk.Label(window, text="e-Class 강의 클리너", font=("나눔고딕", 12, "bold"))
-title.pack(padx=15, pady=(10, 5))
+title = ttk.Label(window, text="Eclass Lectures Cleaner", font=("맑은 고딕", 10))
+title.pack(padx=15, pady=(15, 5))
 
 frame1 = ttk.LabelFrame(window, text="Info")
 frame1.pack(padx=10, pady=5)
