@@ -70,6 +70,8 @@ def check_video(driver):
             continue
         target = element.find_element(By.XPATH, "../..")
         time_ratio = target.find_element(By.XPATH, "./child::*[2]/child::*[3]").get_attribute("innerText")
+        if " / " not in time_ratio:
+            time_ratio = "0:00 / 0:00"
         times = time_ratio.split(" / ")
         curr_time = time2seconds(times[0])
         tot_time = time2seconds(times[1])
@@ -133,6 +135,7 @@ def main():
             if check_all != True:
                 bar = watch_video(driver, curr_time, tot_time, lec_title)
                 bar.destroy()
+                print(f"수강 완료: {lec_title}")
                 driver.back()
                 driver.refresh()
             else:
