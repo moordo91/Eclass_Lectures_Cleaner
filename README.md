@@ -24,6 +24,9 @@ Chrome이 설치되어 있어야 합니다.
 
 ![실행 화면](https://github.com/moordo91/Eclass_Lectures_Cleaner/assets/82254758/9f0d103b-1ffd-4440-a604-0e2f0012b0f0)
 
+<img src="https://github.com/moordo91/Eclass_Lectures_Cleaner/assets/82254758/2df63ea6-14fe-4e9b-8a18-e7e44f2e1724" width="70%" height="70%" alt="진행 화면"/>
+
+
 ## 사용법
 
 1. 다운로드한 파일을 실행합니다.
